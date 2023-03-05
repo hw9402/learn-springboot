@@ -1,6 +1,7 @@
 package com.hw.hellospring.domain;
 
 public class Member {
+
     private long id;
     private String name;
 
