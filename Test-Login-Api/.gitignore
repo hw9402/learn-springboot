@@ -37,4 +37,5 @@ out/
 .vscode/
 
 ### environment variable ###
-**/resources/application.yml
+application.yml
+application-oauth.yml
