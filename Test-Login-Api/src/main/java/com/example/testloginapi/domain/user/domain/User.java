@@ -23,26 +23,18 @@ public class User {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(name = "profile_image_url", nullable = false)
-    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
     @Builder
-    public User(String userId, String username, String password, String email, String profileImageUrl, Role role) {
+    public User(String userId, String username, String email, Role role) {
         this.userId = userId;
         this.username = username;
-        this.password = password;
         this.email = email;
-        this.profileImageUrl = profileImageUrl;
         this.role = role;
     }
 }
