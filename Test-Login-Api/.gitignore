@@ -39,3 +39,4 @@ out/
 ### environment variable ###
 application.yml
 application-oauth.yml
+application-jwt.yml
