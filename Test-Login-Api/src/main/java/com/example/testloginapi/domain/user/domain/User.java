@@ -1,15 +1,12 @@
 package com.example.testloginapi.domain.user.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_tbl")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class User {
 
@@ -17,24 +14,36 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private String userId;
+    @Column(nullable = false, unique = true)
+    private String providerId;
 
     @Column(nullable = false)
-    private String username;
+    private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column
+    private String refreshToken;
+
     @Builder
-    public User(String userId, String username, String email, Role role) {
-        this.userId = userId;
-        this.username = username;
+    public User(String providerId, String name, String email, String imageUrl, Role role, String refreshToken) {
+        this.providerId = providerId;
+        this.name = name;
         this.email = email;
+        this.imageUrl = imageUrl;
         this.role = role;
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

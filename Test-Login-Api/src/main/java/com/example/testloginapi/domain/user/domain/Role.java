@@ -1,15 +1,14 @@
 package com.example.testloginapi.domain.user.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum Role {
 
-    ROLE_ADMIN("admin"),
-    ROLE_USER("user"),
-    ROLE_GUEST("guest");
+    ROLE_GUEST("guest"),
+    ROLE_USER("user");
 
     private final String key;
 }

@@ -1,30 +1,30 @@
 package com.example.testloginapi.global.security;
 
-import jakarta.servlet.FilterChain;
+import com.example.testloginapi.global.auth.CustomOAuth2UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .rememberMe().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .headers().frameOptions().disable()
                 .and()
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll())
-                .oauth2Login(Customizer.withDefaults());
+                .formLogin().disable()
+                .authorizeHttpRequests()
+                .anyRequest().permitAll()
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
         return http.build();
     }
 }
