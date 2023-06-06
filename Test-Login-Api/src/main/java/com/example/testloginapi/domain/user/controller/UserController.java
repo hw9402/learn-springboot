@@ -1,22 +1,26 @@
 package com.example.testloginapi.domain.user.controller;
 
-import com.example.testloginapi.domain.user.domain.dto.GoogleLoginRequestDto;
-import com.example.testloginapi.domain.user.service.UserService;
+import com.example.testloginapi.domain.user.domain.User;
+import com.example.testloginapi.domain.user.repository.UserRepository;
+import com.example.testloginapi.global.auth.userinfo.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    @CrossOrigin("http://localhost:3000")
-    @PostMapping("/api/v1/user")
-    public void save(@RequestBody GoogleLoginRequestDto requestDto) {
-        userService.save(requestDto);
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public User getCurrentUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return userRepository.findById(userDetails.getId())
+                .orElseThrow(() -> new IllegalArgumentException("not found user"));
     }
 }
