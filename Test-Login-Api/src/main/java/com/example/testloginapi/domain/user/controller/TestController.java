@@ -9,7 +9,7 @@ public class TestController {
 
     @GetMapping("/api/login/google")
     public void test(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
+        String token = request.getHeader("Authorization");
 
         // 기대값: 구글로부터 받은 엑세스 토큰
         System.out.println(token);

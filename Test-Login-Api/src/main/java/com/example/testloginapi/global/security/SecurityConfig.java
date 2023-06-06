@@ -38,9 +38,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests()
-                    .requestMatchers("/oauth2/**", "/auth/**").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ROLE_ADMIN")
-                    .anyRequest().authenticated();
+                    .anyRequest().permitAll();
 
         http
                 .formLogin().disable()
