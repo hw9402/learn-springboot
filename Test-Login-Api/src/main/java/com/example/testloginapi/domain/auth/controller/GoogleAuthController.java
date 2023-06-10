@@ -1,6 +1,7 @@
 package com.example.testloginapi.domain.auth.controller;
 
 import com.example.testloginapi.domain.auth.service.GoogleOAuthService;
+import com.example.testloginapi.domain.user.domain.dto.UserDto;
 import com.example.testloginapi.domain.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +28,7 @@ public class GoogleAuthController {
     }
 
     @GetMapping("/api/auth/google/info/{id}")
-    public void getAccountInfo(@PathVariable Long id) {
-        userService.findOne(id);
+    public UserDto getAccountInfo(@PathVariable Long id) {
+        return userService.findOne(id);
     }
 }

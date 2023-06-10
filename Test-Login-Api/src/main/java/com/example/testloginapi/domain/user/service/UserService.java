@@ -2,17 +2,16 @@ package com.example.testloginapi.domain.user.service;
 
 import com.example.testloginapi.domain.auth.domain.dto.GoogleResponseTokenDto;
 import com.example.testloginapi.domain.auth.domain.dto.GoogleResponseUserInfoDto;
+import com.example.testloginapi.domain.user.domain.User;
+import com.example.testloginapi.domain.user.domain.dto.UserDto;
 import com.example.testloginapi.domain.user.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.json.BasicJsonParser;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,18 @@ public class UserService {
         return userInfoDto.getEmail();
     }
 
-    public void findOne(Long id) {
-        System.out.println(userRepository.findById(id));
+    public UserDto findOne(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            return UserDto.builder()
+                    .providerId(user.get().getProviderId())
+                    .email(user.get().getEmail())
+                    .name(user.get().getName())
+                    .build();
+        } else {
+            System.out.println(id + "번 유저는 존재하지 않습니다.");
+            return new UserDto();
+        }
     }
 }
