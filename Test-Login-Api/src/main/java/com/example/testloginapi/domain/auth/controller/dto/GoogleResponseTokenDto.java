@@ -1,4 +1,4 @@
-package com.example.testloginapi.domain.auth.domain.dto;
+package com.example.testloginapi.domain.auth.controller.dto;
 
 import lombok.Builder;
 import lombok.Getter;
