@@ -50,8 +50,9 @@ public class User {
         this.role = role;
     }
 
-    public void updateUser(GoogleResponseUserInfoDto userInfo) {
+    public User updateUser(GoogleResponseUserInfoDto userInfo) {
         this.name = userInfo.getName();
         this.profileUrl = userInfo.getPicture();
+        return this;
     }
 }

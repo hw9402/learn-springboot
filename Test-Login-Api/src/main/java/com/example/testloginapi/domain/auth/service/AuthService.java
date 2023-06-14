@@ -7,6 +7,9 @@ import com.example.testloginapi.domain.user.domain.Provider;
 import com.example.testloginapi.domain.user.domain.Role;
 import com.example.testloginapi.domain.user.domain.User;
 import com.example.testloginapi.domain.user.repository.UserRepository;
+import com.example.testloginapi.global.jwt.dto.TokenResponseDto;
+import com.example.testloginapi.global.jwt.util.JwtProperties;
+import com.example.testloginapi.global.jwt.util.JwtProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -23,20 +26,31 @@ public class AuthService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final GoogleProperties googleProperties;
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
-    public void login(String code, String registrationId) throws JsonProcessingException {
-        String accessToken = getAccessToken(code, registrationId);
-        GoogleResponseUserInfoDto userResource = getUserResource(accessToken, registrationId);
+    public TokenResponseDto login(String code, String registrationId) {
+        String authAccessToken = getAccessToken(code, registrationId);
+        GoogleResponseUserInfoDto userResource = getUserResource(authAccessToken, registrationId);
+        User user;
 
         // 유저가 존재하지 않는다면 회원가입 아니면 변경된 점 업데이트(이름, 프로필 사진)
         if (userRepository.findByEmail(userResource.getEmail()).isEmpty()) {
-            save(userResource);
+            user = save(userResource);
         } else {
-            update(userResource);
+            user = update(userResource);
         }
+
+        String accessToken = jwtProvider.createToken(user, JwtProperties.ACCESS_TOKEN_EXPIRED);
+        String refreshToken = jwtProvider.createToken(user, JwtProperties.REFRESH_TOKEN_EXPIRED);
+
+        return TokenResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
-    private String getAccessToken(String authorizationCode, String registrationId) throws JsonProcessingException {
+    // 클라이언트로부터 받은 승인코드를 토큰으로 교환
+    private String getAccessToken(String authorizationCode, String registrationId) {
         MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
         param.add("code", authorizationCode);
         param.add("client_id", googleProperties.getClientId());
@@ -54,6 +68,7 @@ public class AuthService {
         return responseEntity.getBody().getAccess_token();
     }
 
+    // 교환받은 토큰으로 유저 정보 받아옴
     private GoogleResponseUserInfoDto getUserResource(String accessToken, String registrationId) {
         String resourceUri = googleProperties.getResourceUri();
 
@@ -66,8 +81,9 @@ public class AuthService {
         return responseEntity.getBody();
     }
 
+    // 받아온 유저 정보 저장
     @Transactional
-    public void save(GoogleResponseUserInfoDto userResource) {
+    public User save(GoogleResponseUserInfoDto userResource) {
         User user = User.builder()
                 .providerId(userResource.getId())
                 .email(userResource.getEmail())
@@ -76,12 +92,13 @@ public class AuthService {
                 .role(Role.ROLE_USER)
                 .provider(Provider.GOOGLE)
                 .build();
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
+    // 이미 가입된 유저가 변경된 사항이 있으면 업데이트
     @Transactional
-    public void update(GoogleResponseUserInfoDto userResource) {
+    public User update(GoogleResponseUserInfoDto userResource) {
         User user = userRepository.findByEmail(userResource.getEmail()).orElse(new User());
-        user.updateUser(userResource);
+        return user.updateUser(userResource);
     }
 }

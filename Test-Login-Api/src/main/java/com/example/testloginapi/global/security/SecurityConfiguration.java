@@ -1,4 +1,4 @@
-package com.example.testloginapi.global.security.configuration;
+package com.example.testloginapi.global.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
