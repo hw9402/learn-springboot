@@ -10,7 +10,6 @@ import com.example.testloginapi.domain.user.repository.UserRepository;
 import com.example.testloginapi.global.jwt.dto.TokenResponseDto;
 import com.example.testloginapi.global.jwt.util.JwtProperties;
 import com.example.testloginapi.global.jwt.util.JwtProvider;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
