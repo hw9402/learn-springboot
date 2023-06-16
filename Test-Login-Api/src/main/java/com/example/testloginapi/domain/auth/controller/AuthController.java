@@ -22,7 +22,7 @@ public class AuthController {
         response.sendRedirect(googleOAuthRedirectUrl.getOAuthRedirectUrl());
     }
 
-    @PostMapping("/login/oauth2/authorization/{registrationId}")
+    @GetMapping("/login/oauth2/authorization/{registrationId}")
     public TokenResponseDto oAuthLogin(@RequestParam(name = "code") String code,
                                        @PathVariable String registrationId) throws IOException {
         return ResponseEntity.ok(authService.login(code, registrationId)).getBody();
