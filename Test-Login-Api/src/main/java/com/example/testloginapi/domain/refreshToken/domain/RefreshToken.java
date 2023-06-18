@@ -1,32 +1,21 @@
 package com.example.testloginapi.domain.refreshToken.domain;
 
-import com.example.testloginapi.global.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
-@RequiredArgsConstructor
-@Entity
-public class RefreshToken extends BaseTimeEntity {
+@RedisHash(value = "refreshToken") // 만료기한 : 3일
+public class RefreshToken {
 
     @Id
-    private String key;
+    private String authId;
 
-    @Column
-    private String value;
+    @Indexed
+    private String refreshToken;
 
-    @Builder
-    public RefreshToken(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public RefreshToken updateValue(String token) {
-        this.value = token;
-        return this;
-    }
+    @TimeToLive
+    private Long expired;
 }
