@@ -1,6 +1,5 @@
 package com.example.testloginapi.global.security;
 
-import com.example.testloginapi.domain.user.domain.Role;
 import com.example.testloginapi.global.jwt.filter.JwtAuthenticationFilter;
 import com.example.testloginapi.global.jwt.util.JwtProvider;
 import lombok.RequiredArgsConstructor;

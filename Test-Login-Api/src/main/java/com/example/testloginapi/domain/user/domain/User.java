@@ -1,7 +1,6 @@
 package com.example.testloginapi.domain.user.domain;
 
 import com.example.testloginapi.domain.auth.controller.dto.GoogleResponseUserInfoDto;
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
